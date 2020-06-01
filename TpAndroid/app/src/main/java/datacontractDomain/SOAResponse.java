@@ -1,20 +1,11 @@
-package datacontract;
+package datacontractDomain;
 
-public class LoginResponse {
+public class SOAResponse {
+
     private String state;
     private String env;
     private String token;
-    private String error;
-
-    public LoginResponse() {
-    }
-
-    public LoginResponse(String state, String env, String token, String error) {
-        this.state = state;
-        this.env = env;
-        this.token = token;
-        this.error = error;
-    }
+    private String msg;
 
     public String getState() {
         return state;
@@ -40,21 +31,21 @@ public class LoginResponse {
         this.token = token;
     }
 
-    public String getError() {
-        return error;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     @Override
     public String toString() {
-        return "LoginResponse{" +
+        return "SOAResponse{" +
                 "state='" + state + '\'' +
                 ", env='" + env + '\'' +
                 ", token='" + token + '\'' +
-                ", error='" + error + '\'' +
+                ", error='" + msg + '\'' +
                 '}';
     }
 }

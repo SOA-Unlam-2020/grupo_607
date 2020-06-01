@@ -1,6 +1,7 @@
-package interfases;
+package interfaces;
 
-import datacontract.LoginResponse;
+import datacontractImpl.LoginResponse;
+import datacontractImpl.RegisterResponse;
 import domain.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -10,4 +11,7 @@ public interface APIService {
 
     @POST("login")
     Call<LoginResponse> login(@Body User user);
+
+    @POST("register")
+    Call<RegisterResponse> register(@Body User user);
 }
