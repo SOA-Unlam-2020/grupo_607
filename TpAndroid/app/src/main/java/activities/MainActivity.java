@@ -2,6 +2,7 @@ package activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +19,7 @@ import domain.User;
 
 import service.LoginRegisterService;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private EditText editTextName;
     private EditText editTextLastName;
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             String msgError;
             String responseCallback = intent.getAction();
             switch (responseCallback) {
-                case LoginRegisterService.LOGIN_OK:
+                case LoginRegisterService.LOGIN_ERROR: //Cambiar
                     Toast.makeText(MainActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
                     Intent goToHomeActivity = new Intent(MainActivity.this, HomeActivity.class);
                     startActivity(goToHomeActivity);
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 case LoginRegisterService.REGISTER_OK:
                     Toast.makeText(MainActivity.this, "Registro exitoso, favor de loguearse", Toast.LENGTH_SHORT).show();
                     break;
-                case LoginRegisterService.LOGIN_ERROR:
+                //case LoginRegisterService.LOGIN_ERROR:
                 case LoginRegisterService.REGISTER_ERROR:
                     msgError = intent.getExtras().getString("msgError");
                     Toast.makeText(MainActivity.this, msgError, Toast.LENGTH_LONG).show();
