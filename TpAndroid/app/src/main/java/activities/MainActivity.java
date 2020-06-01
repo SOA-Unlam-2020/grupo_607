@@ -99,12 +99,12 @@ public class MainActivity extends AppCompatActivity {
             String responseCallback = intent.getAction();
             switch (responseCallback) {
                 case LoginRegisterService.LOGIN_OK:
-                    Toast.makeText(MainActivity.this, "Login exitoso", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
                     Intent goToHomeActivity = new Intent(MainActivity.this, HomeActivity.class);
                     startActivity(goToHomeActivity);
                     break;
                 case LoginRegisterService.REGISTER_OK:
-                    Toast.makeText(MainActivity.this, "Registro exitoso, favor de loguearse", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Registro exitoso, favor de loguearse", Toast.LENGTH_SHORT).show();
                     break;
                 case LoginRegisterService.LOGIN_ERROR:
                 case LoginRegisterService.REGISTER_ERROR:
@@ -120,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(LoginRegisterService.LOGIN_OK);
         filter.addAction(LoginRegisterService.LOGIN_ERROR);
+        filter.addAction(LoginRegisterService.REGISTER_OK);
+        filter.addAction(LoginRegisterService.REGISTER_ERROR);
         LoginRegisterReceiver rcv = new LoginRegisterReceiver();
         registerReceiver(rcv, filter);
     }
