@@ -17,12 +17,11 @@ import android.widget.TextView;
 import com.facumediotte.tpandroid.R;
 
 import java.text.DecimalFormat;
+import java.util.Random;
 
 public class HomeActivity extends Activity implements SensorEventListener {
 
     private SensorManager mSensorManager;
-    private Sensor sensorShake;
-    private Sensor sensorProximity;
     private TextView textViewSensorDetect;
     private TextView textViewValuesToSend;
 
@@ -58,14 +57,29 @@ public class HomeActivity extends Activity implements SensorEventListener {
                         textViewValuesToSend.setText(txt);
 
                         textViewSensorDetect.setText("Vibracion Detectada");
+                        Random rnd = new Random();
+                        int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
                         View view = this.getWindow().getDecorView();
-                        view.setBackgroundColor(Color.parseColor("fff59d"));
+                        view.setBackgroundColor(color);
                     }
 
                     break;
                 case Sensor.TYPE_PROXIMITY:
 
+                    // Si detecta 0 lo represento
+                    if( event.values[0] == 0 ) {
+                        txt += "Proximidad:\n";
+                        txt += event.values[0] + "\n";
+                        textViewValuesToSend.setText(txt);
+                        textViewSensorDetect.setText("Proximidad Detectada");
+
+                        Random rnd = new Random();
+                        int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                        View view = this.getWindow().getDecorView();
+                        view.setBackgroundColor(color);
+                    }
                     break;
+                default: break;
             }
         }
     }
