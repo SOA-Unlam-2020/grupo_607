@@ -1,7 +1,9 @@
 package interfaces;
 
+import datacontractEvent.RegisterEventResponse;
 import datacontractImpl.LoginResponse;
 import datacontractImpl.RegisterResponse;
+import domain.SensorEvent;
 import domain.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -14,4 +16,7 @@ public interface APIService {
 
     @POST("register")
     Call<RegisterResponse> register(@Body User user);
+
+    @POST("event")
+    Call<RegisterEventResponse> sendEvent(@Body SensorEvent sensorEvent);
 }

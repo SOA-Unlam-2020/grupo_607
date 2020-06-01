@@ -36,7 +36,7 @@ public class LoginRegisterService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         Bundle bundle = intent.getExtras();
         user = (User) bundle.get("User");
-        String action = (String) bundle.get("action");
+        String action = bundle.getString("action");
 
         //Retrofit
         user.setEnv(ENV_TST); //Modificar
@@ -57,6 +57,7 @@ public class LoginRegisterService extends IntentService {
                 Intent intentLogin = new Intent();
                 if(response.isSuccessful()){
                     intentLogin.setAction(LOGIN_OK);
+                    intentLogin.putExtra("token", response.body().getToken());
                 } else {
                     intentLogin.setAction(LOGIN_ERROR);
                     intentLogin.putExtra("msgError", "Error de autenticación");

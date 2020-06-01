@@ -100,8 +100,10 @@ public class MainActivity extends Activity {
             String responseCallback = intent.getAction();
             switch (responseCallback) {
                 case LoginRegisterService.LOGIN_ERROR: //Cambiar
+                    String token = intent.getExtras().getString("token");
                     Toast.makeText(MainActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
                     Intent goToHomeActivity = new Intent(MainActivity.this, HomeActivity.class);
+                    goToHomeActivity.putExtra("token", token);
                     startActivity(goToHomeActivity);
                     break;
                 case LoginRegisterService.REGISTER_OK:

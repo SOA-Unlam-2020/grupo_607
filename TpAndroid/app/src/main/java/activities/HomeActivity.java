@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -19,11 +20,15 @@ import com.facumediotte.tpandroid.R;
 import java.text.DecimalFormat;
 import java.util.Random;
 
+import service.SendDataToServer;
+
 public class HomeActivity extends Activity implements SensorEventListener {
 
     private SensorManager mSensorManager;
     private TextView textViewSensorDetect;
     private TextView textViewValuesToSend;
+    private Intent dataToServer;
+    private String token;
 
     private DecimalFormat twoDecimals = new DecimalFormat("###.##");
 
@@ -31,6 +36,9 @@ public class HomeActivity extends Activity implements SensorEventListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Bundle bundle = getIntent().getExtras();
+        token = bundle.getString("token");
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         textViewSensorDetect = (TextView) findViewById(R.id.textViewSensorDetect);
@@ -48,19 +56,22 @@ public class HomeActivity extends Activity implements SensorEventListener {
 
             switch (event.sensor.getType()) {
                 case Sensor.TYPE_ACCELEROMETER:
-                    if ((event.values[0] > 25) || (event.values[1] > 25) || (event.values[2] > 25))
-                    {
+                    if ((event.values[0] > 25) || (event.values[1] > 25) || (event.values[2] > 25)) {
                         txt += "Acelerometro:\n";
                         txt += "x: " + twoDecimals.format(event.values[0]) + " m/seg2 \n";
                         txt += "y: " + twoDecimals.format(event.values[1]) + " m/seg2 \n";
                         txt += "z: " + twoDecimals.format(event.values[2]) + " m/seg2 \n";
                         textViewValuesToSend.setText(txt);
 
-                        textViewSensorDetect.setText("Vibracion Detectada");
+                        textViewSensorDetect.setText("Vibración Detectada");
                         Random rnd = new Random();
                         int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
                         View view = this.getWindow().getDecorView();
                         view.setBackgroundColor(color);
+
+                        //Enviamos evento al servidor
+                        /*sendEventToServer(textViewSensorDetect.getText().toString(),
+                                textViewValuesToSend.getText().toString());*/
                     }
 
                     break;
@@ -77,11 +88,21 @@ public class HomeActivity extends Activity implements SensorEventListener {
                         int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
                         View view = this.getWindow().getDecorView();
                         view.setBackgroundColor(color);
+
+                        //sendEventToServer();
                     }
                     break;
                 default: break;
             }
         }
+    }
+
+    private void sendEventToServer(String sensor, String dataToSend) {
+        dataToServer = new Intent(HomeActivity.this, SendDataToServer.class);
+        dataToServer.putExtra("sensor", sensor);
+        dataToServer.putExtra("data", dataToSend);
+        dataToServer.putExtra("token",token);
+        startService(dataToServer);
     }
 
     // Metodo que escucha el cambio de sensibilidad de los sensores
