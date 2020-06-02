@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -99,7 +101,7 @@ public class MainActivity extends Activity {
             String msgError;
             String responseCallback = intent.getAction();
             switch (responseCallback) {
-                case LoginRegisterService.LOGIN_ERROR: //Cambiar
+                case LoginRegisterService.LOGIN_OK: //Cambiar
                     String token = intent.getExtras().getString("token");
                     Toast.makeText(MainActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
                     Intent goToHomeActivity = new Intent(MainActivity.this, HomeActivity.class);
@@ -109,7 +111,7 @@ public class MainActivity extends Activity {
                 case LoginRegisterService.REGISTER_OK:
                     Toast.makeText(MainActivity.this, "Registro exitoso, favor de loguearse", Toast.LENGTH_SHORT).show();
                     break;
-                //case LoginRegisterService.LOGIN_ERROR:
+                case LoginRegisterService.LOGIN_ERROR:
                 case LoginRegisterService.LOGIN_FAIL_CALL:
                 case LoginRegisterService.REGISTER_ERROR:
                 case LoginRegisterService.REGISTER_FAIL_CALL:
@@ -138,4 +140,24 @@ public class MainActivity extends Activity {
         stopService(intentLoginRegister);
         super.onDestroy();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        validateConnectivity();
+    }
+
+    public void validateConnectivity(){
+        ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        //boolean isWiFi = (activeNetwork != null)?activeNetwork.getType() == ConnectivityManager.TYPE_WIFI: false;
+
+        if(!isConnected){
+            Toast.makeText(MainActivity.this, "No se pudo establecer conexión de internet", Toast.LENGTH_LONG).show();
+        }
+    }
+
 }

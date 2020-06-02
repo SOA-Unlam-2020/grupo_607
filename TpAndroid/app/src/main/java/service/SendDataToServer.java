@@ -34,10 +34,10 @@ public class SendDataToServer extends IntentService {
         String sensor =  bundle.getString("sensor");
         String data = bundle.getString("data");
         String token = bundle.getString("token");
-        System.out.println("Llegue");
 
         //Retrofit
         //setear tst
+        sensorEvent = new SensorEvent();
         sensorEvent.setEnv(ENV_TST);
         sensorEvent.setType_events(sensor);
         sensorEvent.setState(StatusSensor.ACTIVO.getStatus());
