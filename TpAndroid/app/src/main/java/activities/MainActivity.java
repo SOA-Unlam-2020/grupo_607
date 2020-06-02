@@ -110,7 +110,9 @@ public class MainActivity extends Activity {
                     Toast.makeText(MainActivity.this, "Registro exitoso, favor de loguearse", Toast.LENGTH_SHORT).show();
                     break;
                 //case LoginRegisterService.LOGIN_ERROR:
+                case LoginRegisterService.LOGIN_FAIL_CALL:
                 case LoginRegisterService.REGISTER_ERROR:
+                case LoginRegisterService.REGISTER_FAIL_CALL:
                     msgError = intent.getExtras().getString("msgError");
                     Toast.makeText(MainActivity.this, msgError, Toast.LENGTH_LONG).show();
                     break;
@@ -123,8 +125,10 @@ public class MainActivity extends Activity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(LoginRegisterService.LOGIN_OK);
         filter.addAction(LoginRegisterService.LOGIN_ERROR);
+        filter.addAction(LoginRegisterService.LOGIN_FAIL_CALL);
         filter.addAction(LoginRegisterService.REGISTER_OK);
         filter.addAction(LoginRegisterService.REGISTER_ERROR);
+        filter.addAction(LoginRegisterService.REGISTER_FAIL_CALL);
         LoginRegisterReceiver rcv = new LoginRegisterReceiver();
         registerReceiver(rcv, filter);
     }

@@ -1,10 +1,10 @@
 package activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facumediotte.tpandroid.R;
 
@@ -43,6 +44,8 @@ public class HomeActivity extends Activity implements SensorEventListener {
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         textViewSensorDetect = (TextView) findViewById(R.id.textViewSensorDetect);
         textViewValuesToSend = (TextView) findViewById(R.id.textViewValuesToSend);
+
+        registerEventReceiver();
     }
 
     // Metodo que escucha el cambio de los sensores
@@ -70,8 +73,14 @@ public class HomeActivity extends Activity implements SensorEventListener {
                         view.setBackgroundColor(color);
 
                         //Enviamos evento al servidor
-                        /*sendEventToServer(textViewSensorDetect.getText().toString(),
-                                textViewValuesToSend.getText().toString());*/
+                        String sensor = textViewSensorDetect.getText().toString();
+                        String dataToSend = textViewValuesToSend.getText().toString();
+
+                        dataToServer = new Intent(HomeActivity.this, SendDataToServer.class);
+                        dataToServer.putExtra("sensor", sensor);
+                        dataToServer.putExtra("data", dataToSend);
+                        //dataToServer.putExtra("token",token);
+                        startService(dataToServer);
                     }
 
                     break;
@@ -109,6 +118,39 @@ public class HomeActivity extends Activity implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    //BroadCastReceiver
+
+    public class RegisterEventReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String msgError;
+            String responseCallback = intent.getAction();
+            switch (responseCallback) {
+                case SendDataToServer.SEND_DATA_OK:
+                    Toast.makeText(HomeActivity.this,
+                            "Se envió el evento al servidor correctamente",Toast.LENGTH_SHORT).show();
+                    break;
+                case SendDataToServer.SEND_DATA_ERROR:
+                case SendDataToServer.SEND_DATA_FAIL:
+                    msgError = intent.getExtras().getString("msgError");
+                    Toast.makeText(HomeActivity.this, msgError, Toast.LENGTH_LONG).show();
+                    break;
+                default: break;
+            }
+        }
+    }
+
+
+    private void registerEventReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(SendDataToServer.SEND_DATA_OK);
+        filter.addAction(SendDataToServer.SEND_DATA_ERROR);
+        filter.addAction(SendDataToServer.SEND_DATA_FAIL);
+        RegisterEventReceiver rcv = new RegisterEventReceiver();
+        registerReceiver(rcv, filter);
     }
 
     @Override

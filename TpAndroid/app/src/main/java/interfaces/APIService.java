@@ -7,6 +7,7 @@ import domain.SensorEvent;
 import domain.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface APIService {
@@ -18,5 +19,6 @@ public interface APIService {
     Call<RegisterResponse> register(@Body User user);
 
     @POST("event")
-    Call<RegisterEventResponse> sendEvent(@Body SensorEvent sensorEvent);
+    Call<RegisterEventResponse> sendEvent(  @Header("token") String token,
+                                            @Body SensorEvent sensorEvent);
 }

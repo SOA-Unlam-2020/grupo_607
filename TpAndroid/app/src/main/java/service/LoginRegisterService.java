@@ -25,8 +25,11 @@ public class LoginRegisterService extends IntentService {
     //Mensajes de error
     public static final String LOGIN_OK = "service.LOGIN_OK";
     public static final String LOGIN_ERROR = "service.LOGIN_ERROR";
+    public static final String LOGIN_FAIL_CALL = "service.LOGIN_FAIL_CALL";
     public static final String REGISTER_OK = "service.REGISTER_OK";
     public static final String REGISTER_ERROR = "service.REGISTER_ERROR";
+    public static final String REGISTER_FAIL_CALL = "service.REGISTER_FAIL_CALL";
+
 
     public LoginRegisterService() {
         super("LoginService");
@@ -67,7 +70,10 @@ public class LoginRegisterService extends IntentService {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                System.out.println("Fallo la llamada al servicio de Login");
+                Intent intentLogin = new Intent();
+                intentLogin.setAction(LOGIN_FAIL_CALL);
+                intentLogin.putExtra("msgError", "Error al comunicarse con el servicio de autenticación");
+                sendBroadcast(intentLogin);
             }
         };
     }
@@ -90,7 +96,10 @@ public class LoginRegisterService extends IntentService {
 
             @Override
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                System.out.println("Fallo la llamada al servicio de Login");
+                Intent intentLogin = new Intent();
+                intentLogin.setAction(REGISTER_FAIL_CALL);
+                intentLogin.putExtra("msgError", "Error al comunicarse con el servicio de registración");
+                sendBroadcast(intentLogin);
             }
         };
     }
