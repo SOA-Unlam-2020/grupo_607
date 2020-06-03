@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
     private Intent intentLoginRegister;
     private static String LOGIN = "login";
     private static String REGISTER = "register";
+    private LoginRegisterReceiver rcv;
 
 
     @Override
@@ -131,13 +132,16 @@ public class MainActivity extends Activity {
         filter.addAction(LoginRegisterService.REGISTER_OK);
         filter.addAction(LoginRegisterService.REGISTER_ERROR);
         filter.addAction(LoginRegisterService.REGISTER_FAIL_CALL);
-        LoginRegisterReceiver rcv = new LoginRegisterReceiver();
+        rcv = new LoginRegisterReceiver();
         registerReceiver(rcv, filter);
     }
 
     @Override
     protected void onDestroy() {
-        stopService(intentLoginRegister);
+        if(intentLoginRegister != null){
+            stopService(intentLoginRegister);
+        }
+        unregisterReceiver(rcv);
         super.onDestroy();
     }
 

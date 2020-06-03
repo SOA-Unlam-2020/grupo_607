@@ -43,6 +43,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
     private TextView textViewValuesToSend;
     private Intent dataToServer;
     private String token;
+    private RegisterEventReceiver rcv;
 
     private DecimalFormat twoDecimals = new DecimalFormat("###.##");
     private static final float PARAM_TO_LOW_BATTERY = (float) 0.15;
@@ -218,7 +219,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
         filter.addAction(SendDataToServer.SEND_DATA_OK);
         filter.addAction(SendDataToServer.SEND_DATA_ERROR);
         filter.addAction(SendDataToServer.SEND_DATA_FAIL);
-        RegisterEventReceiver rcv = new RegisterEventReceiver();
+        rcv = new RegisterEventReceiver();
         registerReceiver(rcv, filter);
     }
 
@@ -239,6 +240,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
     @Override
     protected void onDestroy() {
         stopSensores();
+        unregisterReceiver(rcv);
         super.onDestroy();
     }
 
