@@ -1,7 +1,5 @@
 package activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,6 +19,9 @@ import domain.User;
 
 import service.LoginRegisterService;
 
+/**
+ * Activity para login y registración de usuario
+ */
 public class MainActivity extends Activity {
 
     private EditText editTextName;
@@ -43,6 +44,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Obtengo objetos de la vista
         buttonLogin = (Button) findViewById(R.id.buttonLogin);
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
         editTextName = (EditText) findViewById(R.id.editTextName);
@@ -53,12 +55,15 @@ public class MainActivity extends Activity {
         editTextCommission = (EditText) findViewById(R.id.editTextCommission);
         editTextGroup = (EditText) findViewById(R.id.editTextGroup);
 
+        //Seteo listeners de los botones
         buttonLogin.setOnClickListener(botonesListener);
         buttonRegister.setOnClickListener(botonesListener);
 
+        //Registro los action del broadcast
         registerLoginReceiver();
     }
 
+    //Listener de botones con lógica
     private View.OnClickListener botonesListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -94,7 +99,6 @@ public class MainActivity extends Activity {
     };
 
     //BroadCastReceiver
-
     public class LoginRegisterReceiver extends BroadcastReceiver {
 
         @Override
@@ -102,7 +106,7 @@ public class MainActivity extends Activity {
             String msgError;
             String responseCallback = intent.getAction();
             switch (responseCallback) {
-                case LoginRegisterService.LOGIN_OK: //Cambiar
+                case LoginRegisterService.LOGIN_OK:
                     String token = intent.getExtras().getString("token");
                     Toast.makeText(MainActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
                     Intent goToHomeActivity = new Intent(MainActivity.this, HomeActivity.class);
@@ -124,6 +128,7 @@ public class MainActivity extends Activity {
         }
     }
 
+    //Registro los action que espero recibir del broadcast receiver
     private void registerLoginReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(LoginRegisterService.LOGIN_OK);
@@ -136,6 +141,7 @@ public class MainActivity extends Activity {
         registerReceiver(rcv, filter);
     }
 
+    //Saco el registro del broadCast Receiver y paro el servicio de LoginRegisterService
     @Override
     protected void onDestroy() {
         if(intentLoginRegister != null){
@@ -148,10 +154,11 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        //Validar conexión a internet
         validateConnectivity();
     }
 
+    //Valido si tiene conexión a internet
     public void validateConnectivity(){
         ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
 

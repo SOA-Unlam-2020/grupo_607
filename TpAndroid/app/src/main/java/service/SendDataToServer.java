@@ -14,12 +14,20 @@ import retrofit2.Response;
 import utils.APIUtils;
 import utils.StatusSensor;
 
+/**
+ * Servicio que corre en background debido a que extiende de IntentService, se utiliza para registrar
+ * los eventos de sensores en la API
+ */
 public class SendDataToServer extends IntentService {
 
     private APIService soaService;
     private SensorEvent sensorEvent;
+
+    //Ambientes disponibles
     private static final String ENV_DEV = "DEV";
     private static final String ENV_TST = "TEST";
+
+    //Action a responser al broadcast
     public static final String SEND_DATA_OK = "service.SEND_DATA_OK";
     public static final String SEND_DATA_ERROR = "service.SEND_DATA_ERROR";
     public static final String SEND_DATA_FAIL = "service.SEND_DATA_FAIL";
@@ -36,9 +44,8 @@ public class SendDataToServer extends IntentService {
         String token = bundle.getString("token");
 
         //Retrofit
-        //setear tst
         sensorEvent = new SensorEvent();
-        sensorEvent.setEnv(ENV_TST);
+        sensorEvent.setEnv(ENV_DEV);
         sensorEvent.setType_events(sensor);
         sensorEvent.setState(StatusSensor.ACTIVO.getStatus());
         sensorEvent.setDescription(data);
@@ -49,6 +56,7 @@ public class SendDataToServer extends IntentService {
 
     }
 
+    //Callback de la api para la operación event
     private Callback eventCallBack() {
         return new Callback<Object>() {
 
@@ -61,6 +69,7 @@ public class SendDataToServer extends IntentService {
                     intent.setAction(SEND_DATA_ERROR);
                     intent.putExtra("msgError", "Error al registrar el evento.");
                 }
+                //Retorno respuesta al activity que llamo al servicio
                 sendBroadcast(intent);
             }
 
@@ -69,6 +78,7 @@ public class SendDataToServer extends IntentService {
                 Intent intentRegisterEvent = new Intent();
                 intentRegisterEvent.setAction(SEND_DATA_FAIL);
                 intentRegisterEvent.putExtra("msgError", "Error al enviar datos al servidor");
+                //Retorno respuesta al activity que llamo al servicio
                 sendBroadcast(intentRegisterEvent);
             }
         };

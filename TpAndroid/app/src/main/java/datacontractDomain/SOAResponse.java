@@ -1,5 +1,8 @@
 package datacontractDomain;
 
+/**
+ * Clase creada para la respuesta del cliente API para Login y Register
+ */
 public class SOAResponse {
 
     private String state;

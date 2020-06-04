@@ -25,6 +25,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+/**
+ * Utilizamos esta clase de apache para poder serializar y deserializar para el SharedPreferences
+ * No lo incluimos en el gradle porque nos arrojaba un error otras dependencias
+ */
 public class ObjectSerializer {
 
     public static String serialize(Serializable obj) throws IOException {

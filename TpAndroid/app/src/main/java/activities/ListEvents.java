@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.facumediotte.tpandroid.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import utils.ObjectSerializer;
 
+/**
+ * Activity que muestra las eventos que fueron registrando en la aplicación
+ */
 public class ListEvents extends AppCompatActivity {
 
     private ArrayList<String> myEvents;
@@ -33,6 +33,7 @@ public class ListEvents extends AppCompatActivity {
         myLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutEvent);
         myEvents = getEventList();
 
+        //Recorro los eventos registros del más nuevo al más antiguo y creo un textview mostrando sus datos
         for(int i = myEvents.size()-1; i >= 0; i--) {
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -55,6 +56,7 @@ public class ListEvents extends AppCompatActivity {
 
     }
 
+    //Obtiene eventos registrados en SharedPreferences
     public ArrayList<String> getEventList() {
 
         ArrayList<String> eventsSHP = new ArrayList<>();

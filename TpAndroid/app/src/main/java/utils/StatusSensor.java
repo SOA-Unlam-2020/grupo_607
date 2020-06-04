@@ -1,5 +1,8 @@
 package utils;
 
+/**
+ * Enumeradores para enviar si un sensor esta activo o inactivo
+ */
 public enum StatusSensor {
 
     ACTIVO("Activo"),

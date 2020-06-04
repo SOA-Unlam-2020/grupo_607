@@ -2,6 +2,9 @@ package datacontractImpl;
 
 import datacontractDomain.SOAResponse;
 
+/**
+ * Clase creada para la respuesta de la API/login extiende de SOAResponse
+ */
 public class LoginResponse extends SOAResponse {
 
     public LoginResponse() {

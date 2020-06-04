@@ -41,6 +41,9 @@ import java.util.Random;
 import service.SendDataToServer;
 import utils.ObjectSerializer;
 
+/**
+ * Activity HomeActivity donde se registran los eventos de sensores
+ */
 public class HomeActivity extends Activity implements SensorEventListener {
 
     private SensorManager mSensorManager;
@@ -63,30 +66,42 @@ public class HomeActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        //Obtenemos el Token
         Bundle bundle = getIntent().getExtras();
         token = bundle.getString("token");
 
+        //Obtenemos los sensores disponibles
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        //Obtenemos los textview a setear
         textViewSensorDetect = (TextView) findViewById(R.id.textViewSensorDetect);
         textViewValuesToSend = (TextView) findViewById(R.id.textViewValuesToSend);
+
+        //Button para ver la historia de eventos
         buttonHistory = (Button) findViewById(R.id.buttonHistory);
 
+        //Le agregamos una función al click Listener
         buttonHistory.setOnClickListener(buttonHistoryOnClick);
+
+        //Inicializado el arraylist que voy a usar para SharedPreferences
         eventToRegister = new ArrayList<>();
 
+        //Registro los filters
         registerEventReceiver();
     }
 
+    //Le agregamos una función al click Listener
     public View.OnClickListener buttonHistoryOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            //Ir a la pantalla de historial de eventos
             Intent intent = new Intent(HomeActivity.this, ListEvents.class);
             startActivity(intent);
         }
     };
 
 
-    // Metodo que escucha el cambio de los sensores
+    //Metodo que escucha el cambio de los sensores
     @Override
     public void onSensorChanged(SensorEvent event) {
 
@@ -105,6 +120,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
                         textViewValuesToSend.setText(txt);
                         textViewSensorDetect.setText("Vibración Detectada");
 
+                        //Guarda datos en SharedPreferences
                         this.saveOnSharedPreferences(txt);
 
                         //Se le cambia el color del background por uno aleatorio
@@ -118,7 +134,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
                         String dataToSend = textViewValuesToSend.getText().toString();
 
                         dataToSend.concat("\n Se registra evento de acelerometro");
-
+                        //Envio a la API de registrar Evento
                         sendEventToServer(sensor,dataToSend);
                     }
 
@@ -132,6 +148,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
                         textViewValuesToSend.setText(txt);
                         textViewSensorDetect.setText("Proximidad Detectada");
 
+                        //Guarda datos en SharedPreferences
                         this.saveOnSharedPreferences(txt);
 
                         String sensor = textViewSensorDetect.getText().toString();
@@ -139,10 +156,11 @@ public class HomeActivity extends Activity implements SensorEventListener {
 
                         dataToSend += "\nSe registra evento de proximidad";
 
+                        //Valida Permisos para acceder a la camara, si los tiene abro camara
                         if(validaPermisos()) {
                             Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             startActivity(i);
-
+                            //Envio a la API de registrar Evento
                             sendEventToServer(sensor,dataToSend);
                         }
 
@@ -153,6 +171,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
         }
     }
 
+    //Función para enviar datos al registrador de eventos
     private void sendEventToServer(String sensor, String dataToSend) {
         dataToServer = new Intent(HomeActivity.this, SendDataToServer.class);
         dataToServer.putExtra("sensor", sensor);
@@ -161,19 +180,18 @@ public class HomeActivity extends Activity implements SensorEventListener {
         startService(dataToServer);
     }
 
+    //Función que valida permisos
     private boolean validaPermisos() {
-
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M){
             return true;
         }
-
         if((checkSelfPermission(Manifest.permission.CAMERA)==PackageManager.PERMISSION_GRANTED)){
             return true;
         }
-
         if(shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
             cargarDialogoRecomendacion();
         }else{
+            //Se le pide permisos a la camara
             requestPermissions(new String[]{Manifest.permission.CAMERA},100);
         }
 
@@ -183,7 +201,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
+        //Si respondio que si, otorgo permisos
         if(requestCode==100){
             if(grantResults.length==2 && grantResults[0]==PackageManager.PERMISSION_GRANTED
                     && grantResults[1]==PackageManager.PERMISSION_GRANTED){
@@ -193,6 +211,8 @@ public class HomeActivity extends Activity implements SensorEventListener {
 
     }
 
+    //Se le informa al usuario que tiene los permisos desactivados que para usar esta funcionalidad
+    //debe activarlos y se le abre un cuadro de solicitud de permisos
     private void cargarDialogoRecomendacion() {
         AlertDialog.Builder dialogo=new AlertDialog.Builder(HomeActivity.this);
         dialogo.setTitle("Permisos Desactivados");
@@ -218,7 +238,6 @@ public class HomeActivity extends Activity implements SensorEventListener {
     }
 
     //BroadCastReceiver
-
     public class RegisterEventReceiver extends BroadcastReceiver {
 
         @Override
@@ -240,7 +259,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
         }
     }
 
-
+    //Registra los Action que puedo recibir como respuesta del broadcastReceiver
     private void registerEventReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(SendDataToServer.SEND_DATA_OK);
@@ -250,6 +269,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
         registerReceiver(rcv, filter);
     }
 
+    //Inicio sensores, valido conectividad con internet y chequeo estado bateria
     @Override
     protected void onResume() {
         initSensores();
@@ -258,25 +278,33 @@ public class HomeActivity extends Activity implements SensorEventListener {
         super.onResume();
     }
 
+    //Saco los registros de los sensores
     @Override
     protected void onPause() {
         stopSensores();
         super.onPause();
     }
 
+    //Saco los registros de los sensores y saco el registro del broadcast receiver
+    //Paro el servicio de dataToServer para que no consuma memoria
     @Override
     protected void onDestroy() {
+        if(dataToServer != null) {
+            stopService(dataToServer);
+        }
         stopSensores();
         unregisterReceiver(rcv);
         super.onDestroy();
     }
 
+    //Saco los registros de los sensores
     @Override
     protected void onStop() {
         stopSensores();
         super.onStop();
     }
 
+    //Registro los sensores
     @Override
     protected void onRestart() {
         initSensores();
@@ -295,6 +323,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
         mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY));
     }
 
+    //Valido conectividad con internet
     public void validateConnectivity(){
         ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -310,6 +339,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
         }
     }
 
+    //Checkeamos estado bateria baja
     public void checkBattery() {
         Intent batteryStatus = this.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
@@ -326,6 +356,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
         }
     }
 
+    //Guardamos datos en SharedPreferences, se le agrego la fecha
     public void saveOnSharedPreferences(String event) {
 
         //Le pongo fecha y hora para poder verlo en el historial de eventos

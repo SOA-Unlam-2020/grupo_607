@@ -15,21 +15,26 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import utils.APIUtils;
 
+/**
+ * Servicio que corre en background debido a que extiende de IntentService, se utiliza para registrar
+ * los eventos de login y registración de usuarios
+ */
 public class LoginRegisterService extends IntentService {
 
     private User user;
-    private static final String ENV_DEV = "DEV";
-    private static final String ENV_TST = "TEST";
     private APIService soaService;
 
-    //Mensajes de error
+    //Ambientes
+    private static final String ENV_DEV = "DEV";
+    private static final String ENV_TST = "TEST";
+
+    //Action a responser al broadcast
     public static final String LOGIN_OK = "service.LOGIN_OK";
     public static final String LOGIN_ERROR = "service.LOGIN_ERROR";
     public static final String LOGIN_FAIL_CALL = "service.LOGIN_FAIL_CALL";
     public static final String REGISTER_OK = "service.REGISTER_OK";
     public static final String REGISTER_ERROR = "service.REGISTER_ERROR";
     public static final String REGISTER_FAIL_CALL = "service.REGISTER_FAIL_CALL";
-
 
     public LoginRegisterService() {
         super("LoginService");
@@ -42,7 +47,7 @@ public class LoginRegisterService extends IntentService {
         String action = bundle.getString("action");
 
         //Retrofit
-        user.setEnv(ENV_TST); //Modificar
+        user.setEnv(ENV_DEV); //Modificar
         soaService = APIUtils.getAPIService();
 
         if(action.equals("login")){
@@ -52,6 +57,7 @@ public class LoginRegisterService extends IntentService {
         }
     }
 
+    //Callback de la llamada al Login
     public Callback loginCallBack() {
         return new Callback<LoginResponse>() {
             @Override
@@ -65,6 +71,7 @@ public class LoginRegisterService extends IntentService {
                     intentLogin.setAction(LOGIN_ERROR);
                     intentLogin.putExtra("msgError", "Error de autenticación");
                 }
+                //Retorno respuesta al activity que llamo al servicio
                 sendBroadcast(intentLogin);
             }
 
@@ -73,11 +80,13 @@ public class LoginRegisterService extends IntentService {
                 Intent intentLogin = new Intent();
                 intentLogin.setAction(LOGIN_FAIL_CALL);
                 intentLogin.putExtra("msgError", "Error al comunicarse con el servicio de autenticación");
+                //Retorno respuesta al activity que llamo al servicio
                 sendBroadcast(intentLogin);
             }
         };
     }
 
+    //Callback del método register
     public Callback registerCallBack() {
         return new Callback<RegisterResponse>() {
             @Override
@@ -91,6 +100,7 @@ public class LoginRegisterService extends IntentService {
                     intentRegister.putExtra("msgError", "Error en la registración del usuario." +
                             "Favor de revisar que se hayan completado todos los campos correctamente.");
                 }
+                //Retorno respuesta al activity que llamo al servicio
                 sendBroadcast(intentRegister);
             }
 
@@ -99,6 +109,7 @@ public class LoginRegisterService extends IntentService {
                 Intent intentLogin = new Intent();
                 intentLogin.setAction(REGISTER_FAIL_CALL);
                 intentLogin.putExtra("msgError", "Error al comunicarse con el servicio de registración");
+                //Retorno respuesta al activity que llamo al servicio
                 sendBroadcast(intentLogin);
             }
         };

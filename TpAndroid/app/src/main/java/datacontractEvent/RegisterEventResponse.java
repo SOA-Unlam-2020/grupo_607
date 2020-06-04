@@ -1,5 +1,8 @@
 package datacontractEvent;
 
+/**
+ * Clase creada para la respuesta de la API para el método event
+ */
 public class RegisterEventResponse {
     private String state;
     private String env;

@@ -10,6 +10,9 @@ import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
+/**
+ * Interfaz para consumir los métodos Rest que expone la API, sendEvent se le pasa el token de Header
+ */
 public interface APIService {
 
     @POST("login")

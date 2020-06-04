@@ -1,5 +1,8 @@
 package domain;
 
+/**
+ * Clase que enviamos como body del método event de la API
+ */
 public class SensorEvent {
 
     private String env;

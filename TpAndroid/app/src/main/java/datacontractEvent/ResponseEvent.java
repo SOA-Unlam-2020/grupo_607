@@ -1,5 +1,8 @@
 package datacontractEvent;
 
+/**
+ * Clase creada para respuesta de la API de event, es el array que nos responde en formato json
+ */
 public class ResponseEvent {
     private String type_events;
     private String state;

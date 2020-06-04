@@ -2,6 +2,9 @@ package domain;
 
 import java.io.Serializable;
 
+/**
+ * Clase creada para enviar como body en el método login/register
+ */
 public class User implements Serializable {
 
     private String env;
