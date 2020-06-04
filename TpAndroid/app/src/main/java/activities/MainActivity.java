@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.facumediotte.tpandroid.R;
+import com.senDroid.tpandroid.R;
 
 import domain.User;
 

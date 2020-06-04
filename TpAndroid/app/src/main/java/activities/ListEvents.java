@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facumediotte.tpandroid.R;
+import com.senDroid.tpandroid.R;
 
 import java.util.ArrayList;
 

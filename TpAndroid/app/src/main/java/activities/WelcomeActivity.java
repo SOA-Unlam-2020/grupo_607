@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
-import com.facumediotte.tpandroid.R;
+import com.senDroid.tpandroid.R;
 
 /**
  * Activity que muestra el logo de la aplicación
