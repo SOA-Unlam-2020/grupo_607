@@ -12,11 +12,9 @@ En caso de que el dispositivo no tenga conexión a Internet, se mostrará en pan
 
 ✓ **HomeActivity:** La aplicación realiza diferentes acciones según el sensor que detecte y muestra la información recibida. Los eventos son:
 - Acelerómetro: Al agitar el celular (Shake) la interfaz cambia de color.
-- Sensor de proximidad: Al pasar un objeto por el sensor (habitualmente se encuentra en la parte superior del dispositivo), se abre la aplicación cámara para poder capturar una imagen. .
+- Sensor de proximidad: Al pasar un objeto por el sensor (habitualmente se encuentra en la parte superior del dispositivo), se abre la aplicación cámara para poder capturar una imagen. Al activarse el sensor de proximidad por primera vez, se le pedirá permisos al usuario para acceder a la cámara.
 Ambos eventos se registran en el servidor, mostrando el estado en pantalla.
 
 ✓ **ListEvents:** Muestra un listado de todos los eventos de sensores registrados hasta el momento con su correspondiente fecha y hora. 
 
 Otros eventos que se informan son el inicio de sesión y batería baja.
-Al iniciar la aplicación por primera vez, se le pedirá permisos para acceder a la cámara.
-
