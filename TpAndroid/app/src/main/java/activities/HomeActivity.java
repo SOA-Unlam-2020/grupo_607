@@ -20,21 +20,31 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import com.facumediotte.tpandroid.R;
+import com.sendroid.tpandroid.R;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Random;
 
-import okhttp3.internal.Util;
+import domain.Ubication;
+import domain.WeatherResponse;
+import interfaces.APIWeatherService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofitClient.RetrofitClient;
 import service.SendDataToServer;
+import utils.APIUtils;
+import utils.APIWeatherUtils;
 
 public class HomeActivity extends Activity implements SensorEventListener {
 
@@ -47,6 +57,12 @@ public class HomeActivity extends Activity implements SensorEventListener {
 
     private DecimalFormat twoDecimals = new DecimalFormat("###.##");
     private static final float PARAM_TO_LOW_BATTERY = (float) 0.15;
+
+    private TextView textViewCity;
+    private TextView textViewDescription;
+    private TextView textViewHumidity;
+    private TextView textViewTemperature;
+    private Ubication ubication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +77,52 @@ public class HomeActivity extends Activity implements SensorEventListener {
         textViewValuesToSend = (TextView) findViewById(R.id.textViewValuesToSend);
 
         registerEventReceiver();
+
+        textViewCity = findViewById(R.id.textViewCity);
+        textViewTemperature = findViewById(R.id.textViewTemperature);
+        textViewDescription = findViewById(R.id.textViewDescription);
+        textViewHumidity = findViewById(R.id.textViewHumidity);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                ubication = new Ubication(this);
+                double latitud = ubication.getLatitude();
+                getWeatherData("lat="+ubication.getLatitude()+"&lon="+ ubication.getAltitude());
+            } else {
+                ActivityCompat.requestPermissions(
+                        this, new String[] { android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION }, 1222);
+            }
+        }
+
+
+
+    }
+
+    private void getWeatherData(String name){
+
+        APIWeatherService apiInterface = APIWeatherUtils.getAPIWeatherService();
+        //apiInterface = RetrofitClient.getClient("https://api.openweathermap.org/data/2.5/").create(APIWeatherService.class);
+
+        Call<WeatherResponse> call = apiInterface.getWeatherData(name);
+
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+
+                textViewCity.setText("Moron");
+                textViewTemperature.setText("Temperatura"+" "+response.body().getTemp()+" °C");
+                textViewDescription.setText("Sensación térmica"+" "+response.body().getFeels_like()+" °C");
+                textViewHumidity.setText("Humedad"+" "+response.body().getHumidity()+" %");
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                System.out.println("Llegamos");
+                t.printStackTrace();
+            }
+        });
+
     }
 
     // Metodo que escucha el cambio de los sensores
@@ -161,6 +223,14 @@ public class HomeActivity extends Activity implements SensorEventListener {
             if(grantResults.length==2 && grantResults[0]==PackageManager.PERMISSION_GRANTED
                     && grantResults[1]==PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(HomeActivity.this, "Se concedieron los permisos", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if(requestCode==1222){
+            if(grantResults.length==2 && grantResults[0]==PackageManager.PERMISSION_GRANTED
+                    && grantResults[1]==PackageManager.PERMISSION_GRANTED){
+                ubication = new Ubication(this);
+                double latitud = ubication.getLatitude();
+                getWeatherData("lat="+ubication.getLatitude()+"&lon="+ ubication.getAltitude());
             }
         }
 

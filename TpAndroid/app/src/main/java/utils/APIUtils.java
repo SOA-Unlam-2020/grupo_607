@@ -1,6 +1,7 @@
 package utils;
 
 import interfaces.APIService;
+import interfaces.APIWeatherService;
 import retrofitClient.RetrofitClient;
 
 public class APIUtils {

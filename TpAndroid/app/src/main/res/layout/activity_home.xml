@@ -10,12 +10,12 @@
         android:id="@+id/textViewSensor"
         android:layout_width="198dp"
         android:layout_height="37dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="172dp"
         android:text="Sensor Detectado"
         android:textColor="@android:color/black"
         android:textSize="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,12 +23,13 @@
         android:id="@+id/textViewSensorDetect"
         android:layout_width="294dp"
         android:layout_height="39dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="48dp"
         android:background="#009688"
         android:gravity="center"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewSensor" />
 
@@ -36,7 +37,7 @@
         android:id="@+id/textViewValue"
         android:layout_width="87dp"
         android:layout_height="36dp"
-        android:layout_marginTop="112dp"
+        android:layout_marginTop="60dp"
         android:text="Valores"
         android:textColor="@android:color/black"
         android:textSize="24dp"
@@ -48,14 +49,52 @@
         android:id="@+id/textViewValuesToSend"
         android:layout_width="302dp"
         android:layout_height="173dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="36dp"
         android:background="#009688"
         android:gravity="center"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="@+id/textViewSensorDetect"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textViewSensorDetect"
         app:layout_constraintTop_toBottomOf="@+id/textViewValue" />
+
+    <TextView
+        android:id="@+id/textViewCity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        app:layout_constraintEnd_toStartOf="@+id/textViewTemperature"
+        app:layout_constraintStart_toStartOf="@+id/textViewTemperature"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewTemperature"
+        android:layout_width="0dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toStartOf="@+id/textViewDescription"
+        app:layout_constraintStart_toStartOf="@+id/textViewDescription"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCity" />
+
+    <TextView
+        android:id="@+id/textViewDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTemperature" />
+
+    <TextView
+        android:id="@+id/textViewHumidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toStartOf="@+id/textViewDescription"
+        app:layout_constraintStart_toStartOf="@+id/textViewDescription"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

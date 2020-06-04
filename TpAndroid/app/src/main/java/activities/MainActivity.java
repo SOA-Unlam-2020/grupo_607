@@ -1,7 +1,5 @@
 package activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.facumediotte.tpandroid.R;
+import com.sendroid.tpandroid.R;
 
 import domain.User;
 

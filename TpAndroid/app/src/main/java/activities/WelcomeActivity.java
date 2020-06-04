@@ -6,7 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
-import com.facumediotte.tpandroid.R;
+import com.sendroid.tpandroid.R;
 
 
 public class WelcomeActivity extends Activity {

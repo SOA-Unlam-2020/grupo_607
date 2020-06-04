@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.facumediotte.tpandroid"
+        applicationId "com.sendroid.tpandroid.R"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
