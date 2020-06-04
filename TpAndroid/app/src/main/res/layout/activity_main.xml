@@ -161,7 +161,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="@+id/editTextGroup"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/textViewCom"
@@ -186,7 +186,7 @@
         android:layout_marginLeft="44dp"
         android:layout_marginTop="12dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintStart_toEndOf="@+id/textViewGroup"
         app:layout_constraintTop_toBottomOf="@+id/editTextCommission" />
 

@@ -83,9 +83,6 @@ public class HomeActivity extends Activity implements SensorEventListener {
         //Le agregamos una función al click Listener
         buttonHistory.setOnClickListener(buttonHistoryOnClick);
 
-        //Inicializado el arraylist que voy a usar para SharedPreferences
-        eventToRegister = new ArrayList<>();
-
         //Registro los filters
         registerEventReceiver();
     }
@@ -205,7 +202,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
         if(requestCode==100){
             if(grantResults.length==2 && grantResults[0]==PackageManager.PERMISSION_GRANTED
                     && grantResults[1]==PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(HomeActivity.this, "Se concedieron los permisos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "Se concedieron los permisos, probar nuevamente", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -365,7 +362,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
         event += "\n " + dateInString;
 
         if (null == eventToRegister) {
-            eventToRegister = new ArrayList<>();
+            eventToRegister = this.getEventList();
         }
         eventToRegister.add(event);
 
@@ -377,6 +374,23 @@ public class HomeActivity extends Activity implements SensorEventListener {
             e.printStackTrace();
         }
         editor.commit();
+    }
+
+
+    //Obtiene eventos registrados en SharedPreferences
+    public ArrayList<String> getEventList() {
+
+        ArrayList<String> eventsSHP = new ArrayList<>();
+        SharedPreferences prefs = getSharedPreferences(HomeActivity.SHARED_PREFS_FILE, Context.MODE_PRIVATE);
+
+        try {
+            eventsSHP = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString(HomeActivity.FILE_SH_PREF,
+                    ObjectSerializer.serialize(new ArrayList<String>())));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return eventsSHP;
     }
 
 }
