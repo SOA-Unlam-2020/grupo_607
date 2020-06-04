@@ -33,29 +33,43 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewSensor" />
 
     <TextView
-        android:id="@+id/textViewValue"
-        android:layout_width="87dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="112dp"
-        android:text="Valores"
-        android:textColor="@android:color/black"
-        android:textSize="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSensorDetect" />
-
-    <TextView
         android:id="@+id/textViewValuesToSend"
         android:layout_width="302dp"
         android:layout_height="173dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="44dp"
         android:background="#009688"
         android:gravity="center"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="@+id/textViewSensorDetect"
+        app:layout_constraintHorizontal_bias="0.625"
         app:layout_constraintStart_toStartOf="@+id/textViewSensorDetect"
         app:layout_constraintTop_toBottomOf="@+id/textViewValue" />
+
+    <TextView
+        android:id="@+id/textViewValue"
+        android:layout_width="87dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="44dp"
+        android:text="Valores"
+        android:textColor="@android:color/black"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSensorDetect" />
+
+    <Button
+        android:id="@+id/buttonHistory"
+        android:layout_width="190dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="72dp"
+        android:background="@android:color/holo_blue_dark"
+        android:text="Historial de eventos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewValuesToSend" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

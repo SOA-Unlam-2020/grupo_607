@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,21 +31,29 @@ import androidx.annotation.NonNull;
 
 import com.facumediotte.tpandroid.R;
 
-import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
-import okhttp3.internal.Util;
 import service.SendDataToServer;
+import utils.ObjectSerializer;
 
 public class HomeActivity extends Activity implements SensorEventListener {
 
     private SensorManager mSensorManager;
     private TextView textViewSensorDetect;
     private TextView textViewValuesToSend;
+    private Button buttonHistory;
+
     private Intent dataToServer;
     private String token;
     private RegisterEventReceiver rcv;
+    private ArrayList<String> eventToRegister;
+    public static final String SHARED_PREFS_FILE = "RegistroDeEventos";
+    public static final String FILE_SH_PREF = "Eventos";
 
     private DecimalFormat twoDecimals = new DecimalFormat("###.##");
     private static final float PARAM_TO_LOW_BATTERY = (float) 0.15;
@@ -59,9 +69,22 @@ public class HomeActivity extends Activity implements SensorEventListener {
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         textViewSensorDetect = (TextView) findViewById(R.id.textViewSensorDetect);
         textViewValuesToSend = (TextView) findViewById(R.id.textViewValuesToSend);
+        buttonHistory = (Button) findViewById(R.id.buttonHistory);
+
+        buttonHistory.setOnClickListener(buttonHistoryOnClick);
+        eventToRegister = new ArrayList<>();
 
         registerEventReceiver();
     }
+
+    public View.OnClickListener buttonHistoryOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(HomeActivity.this, ListEvents.class);
+            startActivity(intent);
+        }
+    };
+
 
     // Metodo que escucha el cambio de los sensores
     @Override
@@ -81,6 +104,8 @@ public class HomeActivity extends Activity implements SensorEventListener {
                         txt += "z: " + twoDecimals.format(event.values[2]) + " m/seg2 \n";
                         textViewValuesToSend.setText(txt);
                         textViewSensorDetect.setText("Vibración Detectada");
+
+                        this.saveOnSharedPreferences(txt);
 
                         //Se le cambia el color del background por uno aleatorio
                         Random rnd = new Random();
@@ -106,6 +131,8 @@ public class HomeActivity extends Activity implements SensorEventListener {
                         txt += event.values[0] + "\n";
                         textViewValuesToSend.setText(txt);
                         textViewSensorDetect.setText("Proximidad Detectada");
+
+                        this.saveOnSharedPreferences(txt);
 
                         String sensor = textViewSensorDetect.getText().toString();
                         String dataToSend = textViewValuesToSend.getText().toString();
@@ -206,7 +233,7 @@ public class HomeActivity extends Activity implements SensorEventListener {
                 case SendDataToServer.SEND_DATA_ERROR:
                 case SendDataToServer.SEND_DATA_FAIL:
                     msgError = intent.getExtras().getString("msgError");
-                    Toast.makeText(HomeActivity.this, msgError, Toast.LENGTH_LONG).show();
+                    Toast.makeText(HomeActivity.this, msgError, Toast.LENGTH_SHORT).show();
                     break;
                 default: break;
             }
@@ -297,6 +324,28 @@ public class HomeActivity extends Activity implements SensorEventListener {
             String dataToSend = "Se detecto que la batería es menor al 15 %";
             sendEventToServer(lowBattery,dataToSend);
         }
+    }
+
+    public void saveOnSharedPreferences(String event) {
+
+        //Le pongo fecha y hora para poder verlo en el historial de eventos
+        String pattern = "dd-MM-yyyy hh:mm:ss aa";
+        String dateInString =new SimpleDateFormat(pattern).format(new Date());
+        event += "\n " + dateInString;
+
+        if (null == eventToRegister) {
+            eventToRegister = new ArrayList<>();
+        }
+        eventToRegister.add(event);
+
+        SharedPreferences prefs = getSharedPreferences(SHARED_PREFS_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        try {
+            editor.putString(FILE_SH_PREF, ObjectSerializer.serialize(eventToRegister));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        editor.commit();
     }
 
 }
